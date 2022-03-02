@@ -8,7 +8,7 @@ const topTen = [...players].sort((a, b) => b.score - a.score).slice(0, 10);
 <template>
   <div class="player-leaderboard">
     <h2>Leaderboard</h2>
-    <ol v-if="players">
+    <ol v-if="topTen && topTen.length">
       <li v-for="({ name, score }, i) in topTen" :key="i">
         <p>
           <span class="name">{{ name }}</span>

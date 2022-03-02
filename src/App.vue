@@ -12,9 +12,9 @@ import PlayerLeaderboard from './components/PlayerLeaderboard.vue';
     <main>
       <RockPaperScissors />
 
-      <!-- <Suspense>
+      <Suspense>
         <PlayerLeaderboard />
-      </Suspense> -->
+      </Suspense>
     </main>
   </div>
 </template>

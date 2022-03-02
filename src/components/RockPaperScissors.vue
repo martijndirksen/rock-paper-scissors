@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, type Ref } from 'vue';
-import { play, Shape } from '@/api/rock-paper-scissors';
+import { ref, type Ref } from 'vue';
+import { play, Shape, type IApiPlayResponse } from '@/api/rock-paper-scissors';
 
 const shapes: { label: string; value: Shape }[] = [
   { label: '🪨', value: Shape.Rock },
@@ -10,60 +10,103 @@ const shapes: { label: string; value: Shape }[] = [
 
 const selectedShape: Ref<Shape | null> = ref(null);
 const playerName: Ref<string | null> = ref(null);
+const result: Ref<IApiPlayResponse | null> = ref(null);
+
+async function onSubmit() {
+  if (!playerName.value || !selectedShape.value) return;
+  result.value = null;
+
+  const response = await play({
+    playerName: playerName.value,
+    shape: selectedShape.value,
+  });
+
+  result.value = response;
+}
+
+function onPlayAgain() {
+  selectedShape.value = null;
+  result.value = null;
+}
 </script>
 
 <template>
-  <form class="wrapper">
-    <div class="step">
-      <p>1. Choose a name</p>
+  <div class="rock-paper-scissors">
+    <form @submit.prevent="onSubmit">
+      <div class="step">
+        <p>1. Choose a name</p>
 
-      <input
-        v-model.trim="playerName"
-        class="input"
-        type="text"
-        maxlength="16"
-        placeholder="Enter your name here"
-        required
-      />
-    </div>
+        <input
+          class="input"
+          type="text"
+          v-model.trim="playerName"
+          maxlength="16"
+          placeholder="Enter your name here"
+          required
+        />
+      </div>
 
-    <Transition>
-      <div v-if="playerName" class="step">
-        <p>2. Select a shape</p>
+      <Transition>
+        <div v-if="playerName" class="step">
+          <p>2. Select a shape</p>
 
-        <div class="radio-group">
-          <label
-            v-for="{ label, value } in shapes"
-            :key="value"
-            :for="value"
-            class="radio"
-            :class="{ 'is-selected': selectedShape === value }"
-          >
-            <input
-              type="radio"
-              v-model="selectedShape"
-              :value="value"
-              :id="value"
-              name="shapes"
-              required
-            />
-            <span>{{ label }}</span>
-          </label>
+          <div class="radio-group">
+            <label
+              v-for="{ label, value } in shapes"
+              :key="value"
+              :for="value"
+              class="radio"
+              :class="{
+                'is-selected': selectedShape === value,
+                'is-disabled': !!result,
+              }"
+            >
+              <input
+                type="radio"
+                v-model="selectedShape"
+                :value="value"
+                :id="value"
+                :disabled="!!result"
+                name="shapes"
+                required
+              />
+              <span>{{ label }}</span>
+            </label>
+          </div>
+
+          <Transition>
+            <div v-if="selectedShape">
+              <button
+                v-if="result"
+                class="button"
+                type="button"
+                @click="onPlayAgain"
+              >
+                Play Again
+              </button>
+              <button v-else class="button" type="submit">Play</button>
+            </div>
+          </Transition>
         </div>
-      </div>
-    </Transition>
+      </Transition>
+    </form>
 
     <Transition>
-      <div v-if="selectedShape" class="step">
-        <button class="button" type="submit">Play</button>
+      <div v-show="result" class="result">
+        <p>{{ result?.message }}</p>
       </div>
     </Transition>
-  </form>
+  </div>
 </template>
 
 <style scoped>
-.wrapper {
+.rock-paper-scissors {
   padding: 2rem 0;
+  min-height: 477px;
+}
+
+.result p {
+  text-align: center;
 }
 
 .step {
@@ -80,6 +123,8 @@ const playerName: Ref<string | null> = ref(null);
   padding: 1rem;
   margin: 0 auto 1rem auto;
   font-size: 1.25rem;
+  line-height: 1.5;
+  border: 1px solid #999999;
   border-radius: 4px;
 }
 
@@ -107,8 +152,16 @@ const playerName: Ref<string | null> = ref(null);
   transition: background-color 0.2s ease-out;
 }
 
+.radio span {
+  user-select: none;
+}
+
 .radio.is-selected {
   background-color: var(--primary);
+}
+
+.radio.is-disabled {
+  cursor: not-allowed;
 }
 
 .button {
@@ -131,6 +184,10 @@ const playerName: Ref<string | null> = ref(null);
 }
 
 @media (min-width: 768px) {
+  .rock-paper-scissors {
+    min-height: 640px;
+  }
+
   .radio {
     font-size: 4rem;
     padding: 1rem;
