@@ -17,39 +17,54 @@ function onSelect(value: Shape) {
 </script>
 
 <template>
-  <div class="shape-selector">
+  <div class="wrapper">
     <p>Select a shape</p>
-    <div class="buttons">
-      <button
+    <div class="radio-group">
+      <label
         v-for="{ label, value } in shapes"
         :key="value"
-        :title="value"
-        @click="onSelect(value)"
+        :for="value"
+        class="radio"
+        :class="{ 'is-selected': selection === value }"
       >
-        {{ label }}
-      </button>
+        <input
+          type="radio"
+          :value="value"
+          :id="value"
+          name="shapes"
+          @click="onSelect(value)"
+        />
+        <span>{{ label }}</span>
+      </label>
     </div>
+
     <p>You selected: {{ selection }}</p>
   </div>
 </template>
 
 <style scoped>
-.shape-selector {
+.wrapper {
   padding: 2rem 0;
 }
 
-.shape-selector p {
+.wrapper > p {
   text-align: center;
   margin-bottom: 0.5rem;
 }
 
-.buttons {
+.radio-group {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.buttons button {
+.radio input[type='radio'] {
+  position: fixed;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.radio {
   font-size: 2rem;
   line-height: 1.5;
   padding: 1rem;
@@ -61,12 +76,12 @@ function onSelect(value: Shape) {
   transition: background-color 0.2s ease-out;
 }
 
-.buttons button:hover {
+.radio.is-selected {
   background-color: #42b883;
 }
 
 @media (min-width: 768px) {
-  .buttons button {
+  .radio {
     font-size: 4rem;
     padding: 1rem;
     margin: 1rem;
@@ -74,7 +89,7 @@ function onSelect(value: Shape) {
 }
 
 @media (min-width: 1024px) {
-  .buttons button {
+  .radio {
     font-size: 6rem;
     padding: 2rem;
     margin: 1rem;

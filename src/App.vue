@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ShapeSelector from './components/ShapeSelector.vue';
+import RockPaperScissors from './components/RockPaperScissors.vue';
 import PlayerLeaderboard from './components/PlayerLeaderboard.vue';
 </script>
 
@@ -10,11 +10,11 @@ import PlayerLeaderboard from './components/PlayerLeaderboard.vue';
       <h2>A Vue 3 app</h2>
     </header>
     <main>
-      <ShapeSelector />
+      <RockPaperScissors />
 
-      <Suspense>
+      <!-- <Suspense>
         <PlayerLeaderboard />
-      </Suspense>
+      </Suspense> -->
     </main>
   </div>
 </template>
