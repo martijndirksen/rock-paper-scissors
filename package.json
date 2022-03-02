@@ -1,6 +1,11 @@
 {
-  "name": "vue-3-sandbox",
-  "version": "0.0.0",
+  "name": "rock-paper-scissors",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martijndirksen/rock-paper-scissors.git"
+  },
+  "author": "Martijn Dirksen",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
