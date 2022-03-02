@@ -12,13 +12,13 @@ export interface IApiPlayer {
 const baseUrl =
   'https://apim-netivity-trendwatch-prod-euwe.azure-api.net/rock-paper-scissors';
 
-const headers = { Accept: 'application/json' };
+async function doFetch<T>(path: string, method: 'GET' | 'POST'): Promise<T> {
+  return await fetch(baseUrl + path, {
+    method,
+    headers: { Accept: 'application/json' },
+  }).then((x) => x.json());
+}
 
 export async function getPlayers(): Promise<IApiPlayer[]> {
-  const response = await fetch(baseUrl + '/GetPlayers', {
-    method: 'GET',
-    headers,
-  });
-
-  return await response.json();
+  return doFetch('/GetPlayers', 'GET');
 }
