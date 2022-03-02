@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, type Ref } from 'vue';
-import { Shape } from '@/api/rock-paper-scissors';
+import { play, Shape } from '@/api/rock-paper-scissors';
 
 const shapes: { label: string; value: Shape }[] = [
   { label: '🪨', value: Shape.Rock },
@@ -8,38 +8,57 @@ const shapes: { label: string; value: Shape }[] = [
   { label: '✂️', value: Shape.Scissors },
 ];
 
-const selection: Ref<Shape | null> = ref(null);
-
-function onSelect(value: Shape) {
-  console.log(value);
-  selection.value = value;
-}
+const selectedShape: Ref<Shape | null> = ref(null);
+const playerName: Ref<string | null> = ref(null);
 </script>
 
 <template>
-  <div class="wrapper">
-    <p>Select a shape</p>
-    <div class="radio-group">
-      <label
-        v-for="{ label, value } in shapes"
-        :key="value"
-        :for="value"
-        class="radio"
-        :class="{ 'is-selected': selection === value }"
-      >
-        <input
-          type="radio"
-          :value="value"
-          :id="value"
-          name="shapes"
-          @click="onSelect(value)"
-        />
-        <span>{{ label }}</span>
-      </label>
+  <form class="wrapper">
+    <div class="step">
+      <p>1. Choose a name</p>
+
+      <input
+        v-model.trim="playerName"
+        class="input"
+        type="text"
+        maxlength="16"
+        placeholder="Enter your name here"
+        required
+      />
     </div>
 
-    <p>You selected: {{ selection }}</p>
-  </div>
+    <Transition>
+      <div v-if="playerName" class="step">
+        <p>2. Select a shape</p>
+
+        <div class="radio-group">
+          <label
+            v-for="{ label, value } in shapes"
+            :key="value"
+            :for="value"
+            class="radio"
+            :class="{ 'is-selected': selectedShape === value }"
+          >
+            <input
+              type="radio"
+              v-model="selectedShape"
+              :value="value"
+              :id="value"
+              name="shapes"
+              required
+            />
+            <span>{{ label }}</span>
+          </label>
+        </div>
+      </div>
+    </Transition>
+
+    <Transition>
+      <div v-if="selectedShape" class="step">
+        <button class="button" type="submit">Play</button>
+      </div>
+    </Transition>
+  </form>
 </template>
 
 <style scoped>
@@ -47,9 +66,21 @@ function onSelect(value: Shape) {
   padding: 2rem 0;
 }
 
-.wrapper > p {
+.step {
+  margin-bottom: 2rem;
+}
+
+.step > p {
   text-align: center;
   margin-bottom: 0.5rem;
+}
+
+.input {
+  display: block;
+  padding: 1rem;
+  margin: 0 auto 1rem auto;
+  font-size: 1.25rem;
+  border-radius: 4px;
 }
 
 .radio-group {
@@ -77,7 +108,26 @@ function onSelect(value: Shape) {
 }
 
 .radio.is-selected {
-  background-color: #42b883;
+  background-color: var(--primary);
+}
+
+.button {
+  display: block;
+  margin: 1rem auto;
+  cursor: pointer;
+  font-size: 2rem;
+  padding: 1rem 4rem;
+  color: #fff;
+  background-color: var(--primary);
+  border: 0;
+  border-radius: var(--radius);
+  outline: 0 solid var(--primary);
+  outline-offset: -1px;
+  transition: outline-width 0.2s ease-in-out;
+}
+
+.button:hover {
+  outline-width: 0.5rem;
 }
 
 @media (min-width: 768px) {
