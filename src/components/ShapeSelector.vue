@@ -8,10 +8,8 @@ const shapes: { label: string; value: Shape }[] = [
   { label: '✂️', value: Shape.Scissors },
 ];
 
-// reactive state
 const selection: Ref<Shape | null> = ref(null);
 
-// functions that mutate state and trigger updates
 function onSelect(value: Shape) {
   console.log(value);
   selection.value = value;
@@ -19,7 +17,7 @@ function onSelect(value: Shape) {
 </script>
 
 <template>
-  <div class="selector">
+  <div class="shape-selector">
     <p>Select a shape</p>
     <div class="buttons">
       <button
@@ -36,11 +34,11 @@ function onSelect(value: Shape) {
 </template>
 
 <style scoped>
-.selector {
+.shape-selector {
   padding: 2rem 0;
 }
 
-.selector p {
+.shape-selector p {
   text-align: center;
   margin-bottom: 0.5rem;
 }
@@ -57,9 +55,9 @@ function onSelect(value: Shape) {
   padding: 1rem;
   margin: 0.25rem;
   border: 0;
-  border-radius: 1rem;
+  border-radius: var(--radius);
   cursor: pointer;
-  background-color: #eeeeee;
+  background-color: var(--secondary);
   transition: background-color 0.2s ease-out;
 }
 
@@ -72,7 +70,6 @@ function onSelect(value: Shape) {
     font-size: 4rem;
     padding: 1rem;
     margin: 1rem;
-    border-radius: 2rem;
   }
 }
 
@@ -81,7 +78,6 @@ function onSelect(value: Shape) {
     font-size: 6rem;
     padding: 2rem;
     margin: 1rem;
-    border-radius: 3rem;
   }
 }
 </style>

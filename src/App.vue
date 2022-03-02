@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import Selector from './components/Selector.vue';
+import ShapeSelector from './components/ShapeSelector.vue';
+import PlayerLeaderboard from './components/PlayerLeaderboard.vue';
 </script>
 
 <template>
@@ -9,7 +10,11 @@ import Selector from './components/Selector.vue';
       <h2>A Vue 3 app</h2>
     </header>
     <main>
-      <Selector />
+      <ShapeSelector />
+
+      <Suspense>
+        <PlayerLeaderboard />
+      </Suspense>
     </main>
   </div>
 </template>
